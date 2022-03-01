@@ -15,6 +15,14 @@ class PrefixTreeNode {
             return node_char;
         }
 
+        int get_level() {
+            return level;
+        }
+
+        std::unordered_map<char, PrefixTreeNode*> get_children() {
+            return children;
+        }
+
         void addWord(std::string word) {
             num_words++;
 

@@ -1,4 +1,4 @@
-#include "wordle.h"
+#include "guesser.h"
 
 int main() {
     PrefixTreeNode* root = new PrefixTreeNode(-1, '$');
@@ -17,6 +17,12 @@ int main() {
 
     // will visualize only till the root and children
     root->visualizeTree(0, true);
+
+    // find the first word to guess
+    Guesser* AI = new Guesser(root);
+    std::string first_guess = AI->guessWord();
+    printf("First guess: %s\n", first_guess.c_str());
+    
     return 0;
 }
 
