@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include <fstream>
 
 class PrefixTreeNode {
     public:
@@ -31,12 +32,15 @@ class PrefixTreeNode {
             }
         }
 
-        void visualizeTree(int spaces) {
+        void visualizeTree(int spaces, bool visualizeChildren) {
             std::cout << std::string( spaces, '-' );
             printf("Node (%c, %d)\n", node_char, num_words);
             auto it = children.begin();
             while (it != children.end()) {
-                it->second->visualizeTree(spaces + 2);
+                if (visualizeChildren) {
+                    if (level == -1)
+                        it->second->visualizeTree(spaces + 2, false);
+                }
                 it++;
             }
         }
