@@ -22,7 +22,16 @@ int main() {
     Guesser* AI = new Guesser(root);
     std::string first_guess = AI->guessWord();
     printf("First guess: %s\n", first_guess.c_str());
-    
+
+    // testing the checker
+    std::string guess = "hassi";
+    std::string golden = "hsrde";
+    std::vector<int> ans = AI->checker(guess, golden);
+
+    for (int i = 0; i < ans.size(); i++) {
+        printf("%d ", ans[i]);
+    }
+    printf("\n");
     return 0;
 }
 

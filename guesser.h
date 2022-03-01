@@ -3,6 +3,32 @@
 class Guesser {
     public:
         Guesser(PrefixTreeNode* root): root(root) {}
+
+        std::vector<int> checker(std::string guess, std::string golden) {
+            std::vector<int> ans;
+            for (int i = 0; i < golden.length(); i++) {
+                ans.push_back(-1);
+            }
+
+            std::unordered_map<char, int> freq;
+            for (int i = 0; i < golden.length(); i++) {
+                if (golden[i] == guess[i]) {
+                    ans[i] = 1;
+                } else {
+                    freq[golden[i]]++;
+                }
+            }
+
+            for (int i = 0; i < guess.length(); i++) {
+                if (ans[i] != 1) {
+                    if (freq[guess[i]] > 0) {
+                        ans[i] = 0;
+                        freq[guess[i]]--;
+                    }
+                }
+            }
+            return ans;
+        }
         
         std::string guessWord() {
             std::string guess = "";
