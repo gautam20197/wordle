@@ -33,3 +33,5 @@ The prefix tree with the root and the children looks like:
 --Node (l, 577)
 --Node (m, 693)
 </pre>
+
+Using basic frequency distributions and a greedy algorithm, the best first word comes to be STONY.
