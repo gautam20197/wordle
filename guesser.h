@@ -33,9 +33,9 @@ class Guesser {
         std::string guessWord() {
             std::string guess = "";
             PrefixTreeNode* curr = root;
-            while (curr->get_level() < 4) {
-                int curr_level = curr->get_level();
-                if (curr_level != -1) {
+            int curr_level = -1;
+            while (curr_level < 5) {
+                if (curr->get_level() != -1) {
                     guess += curr->get_node_char();
                 }
 
@@ -45,16 +45,58 @@ class Guesser {
 
                 while (it != curr_children.end()) {
                     int curr_num = it->second->get_num_words();
-                    if (curr_num > max_num) {
+                    if (curr_num > max_num && it->second->is_enabled()) {
                         curr = it->second;
                         max_num = curr_num;
                     }
                     it++;
                 }
+                curr_level++;
             }
-            guess += curr->get_node_char();
             return guess;
         }
+
+        bool allCorrect(std::vector<int>& ans) {
+            for (int i:ans) {
+                if (i != 1) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        int playGame(std::string golden) {
+            std::vector<int> ans;
+            for (int i = 0; i < golden.length(); i++) {
+                ans.push_back(-1);
+            }
+
+            int attempts = 0;
+
+            while (!allCorrect(ans) && attempts < 5) {
+                attempts++;
+                std::string guess = guessWord();
+                printf("GUESS %d : %s\n", attempts, guess.c_str());
+                ans = checker(guess, golden);
+
+                if(allCorrect(ans)) {
+                    return attempts;
+                }
+
+                for (int i = 0; i < ans.size(); i++) {
+                    if (ans[i] == 1) {
+                        root->disableNodeWithoutChar(guess[i], i);
+                        fixed_positions.insert(i);
+                    } else if (ans[i] == -1) {
+                        root->disableNodeWithChar(guess[i]);
+                    }
+                }
+                root->visualizeTree(0, 0);
+            }
+            return attempts;  
+        }
+
     private:
         PrefixTreeNode* root;
+        std::unordered_set<int> fixed_positions;
 };
