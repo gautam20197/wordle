@@ -42,7 +42,7 @@ int main() {
     // find the first word to guess
     Guesser* AI = new Guesser(root);
     
-    int attempts = AI->playGame("stale");
+    int attempts = AI->playGame("horse");
     printf("ATTEMPTS : %d\n", attempts);
     
     return 0;

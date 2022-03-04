@@ -86,9 +86,21 @@ class Guesser {
                 for (int i = 0; i < ans.size(); i++) {
                     if (ans[i] == 1) {
                         root->disableNodeWithoutChar(guess[i], i);
-                        fixed_positions.insert(i);
+                        if (char_fixed_positions.count(guess[i])) {
+                            char_fixed_positions[guess[i]].insert(i);
+                        } else {
+                            std::unordered_set<int> char_fixed_pos_set;
+                            char_fixed_pos_set.insert(i);
+                            char_fixed_positions[guess[i]] = char_fixed_pos_set;
+                        }
                     } else if (ans[i] == -1) {
-                        root->disableNodeWithChar(guess[i]);
+                        if (char_fixed_positions.count(guess[i])) {
+                            root->disableNodeWithChar(guess[i], char_fixed_positions[guess[i]]);
+                        } else {
+                            std::unordered_set<int> char_fixed_pos_set;
+                            root->disableNodeWithChar(guess[i], char_fixed_pos_set);
+                        }
+                        
                     }
                 }
                 root->visualizeTree(0, 0);
@@ -98,5 +110,5 @@ class Guesser {
 
     private:
         PrefixTreeNode* root;
-        std::unordered_set<int> fixed_positions;
+        std::unordered_map<char, std::unordered_set<int>> char_fixed_positions;
 };

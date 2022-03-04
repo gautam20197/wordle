@@ -80,14 +80,14 @@ class PrefixTreeNode {
             parent->set_num_words(parent->get_num_words() + num_words);
         }
 
-        void disableNodeWithChar(char avoid_char) {
+        void disableNodeWithChar(char avoid_char, std::unordered_set<int>& levels_not_disable) {
             if (enabled) {
-                if (node_char == avoid_char) {
+                if (node_char == avoid_char && levels_not_disable.count(level) == 0) {
                     this->disableNode();
                 }   else {
                     auto it = children.begin();
                     while (it != children.end()) {
-                        it->second->disableNodeWithChar(avoid_char);
+                        it->second->disableNodeWithChar(avoid_char, levels_not_disable);
                         it++;
                     }
                 }
