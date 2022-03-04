@@ -44,40 +44,67 @@ class PrefixTreeNode {
             }
         }
 
-        void enable() {
+        void increment_parent_words(int added_words) {
+            num_words += added_words;
+            if (num_words > 0) {
+                enabled = true;
+            }
+            if (parent) {
+                parent->increment_parent_words(added_words);
+            }
+        }
+
+        void disableChildren() {
+            enabled = false;
+            auto it = children.begin();
+
+            while (it != children.end()) {
+                it->second->disableChildren();
+                it++;
+            }
+            
+            num_words = 0;
+        }
+
+        int enableChildren() {
             enabled = true;
+
+            int enabled_words = 0;
+            auto it = children.begin();
+
+            while (it != children.end()) {
+                enabled_words += it->second->enableChildren();
+                it++;
+            }
+
+            if (level == 4) {
+                enabled_words = 1;
+            }
+
+            num_words = enabled_words;
+
+            return num_words;
         }
 
         void disableNode() {
             if (enabled) {
-                enabled = false;
-                auto it = children.begin();
-
-                while (it != children.end()) {
-                    it->second->disableNode();
-                    it++;
-                }
+                int words = num_words;
+                disableChildren();
 
                 if (parent && parent->is_enabled()) {
-                    decrement_parent_words(num_words);
+                    parent->decrement_parent_words(words);
                 }
-
-                num_words = 0;
             }
         }
 
         void enableNode() {
-            enable();
-            auto it = children.begin();
+            if (!enabled) {
+                enableChildren();
 
-            while (it != children.end()) {
-                it->second->enableNode();
-                it++;
+                if (parent) {
+                    parent->increment_parent_words(num_words);
+                }
             }
-            if (level == 4) {
-                num_words = 1;
-            }
-            parent->set_num_words(parent->get_num_words() + num_words);
         }
 
         void disableNodeWithChar(char avoid_char, std::unordered_set<int>& levels_not_disable) {
