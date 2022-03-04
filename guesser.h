@@ -29,6 +29,40 @@ class Guesser {
             }
             return ans;
         }
+
+        std::vector<std::string> permuteChars(std::vector<char>& yellow_chars, std::unordered_map<char, std::vector<int>>& char_allowed_positions) {
+            std::vector<std::string> ans;
+            std::unordered_set<int> fixed_positions;
+
+            int total_with_repititions = 1;
+            for (auto elem:char_allowed_positions) {
+                total_with_repititions *= elem.second.size();
+            }
+
+            for (int i = 0; i < total_with_repititions; i++) {
+                fixed_positions.clear();
+                std::string curr = "$$$$$";
+                bool is_repeated = false;
+                int string_index = i;
+                for (int j = 0; j < yellow_chars.size(); j++) {
+                    char curr_char = yellow_chars[j];
+                    int index = string_index % char_allowed_positions[curr_char].size();
+                    int position = char_allowed_positions[curr_char][index];
+                    if (fixed_positions.count(position)) {
+                        is_repeated = true;
+                        break;
+                    } else {
+                        fixed_positions.insert(position);
+                        curr[position] = curr_char;
+                    }
+                    string_index /= char_allowed_positions[curr_char].size();
+                }
+                if (!is_repeated) {
+                    ans.push_back(curr);
+                }
+            }
+            return ans;
+        }
         
         std::string guessWord() {
             std::string guess = "";

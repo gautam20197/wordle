@@ -21,6 +21,18 @@ void test_disable_node(PrefixTreeNode* root) {
     root->visualizeTree(0, true);
 }
 
+void test_permute_chars(Guesser* AI) {
+    std::vector<char> yellow_chars{'a', 'c', 'e'};
+    std::unordered_map<char, std::vector<int>> char_allowed_positions;
+    char_allowed_positions['a'] = std::vector<int>{0,1};
+    char_allowed_positions['c'] = std::vector<int>{2,1};
+    char_allowed_positions['e'] = std::vector<int>{3,1,4,0};
+    std::vector<std::string> ans = AI->permuteChars(yellow_chars, char_allowed_positions);
+    for(int i = 0; i < ans.size(); i++) {
+        printf("%s\n", ans[i].c_str());
+    }
+}
+
 int main() {
     PrefixTreeNode* root = new PrefixTreeNode(-1, '$', nullptr);
 
@@ -36,14 +48,14 @@ int main() {
         root->addWord(word);
     }
 
-    // will visualize only till the root and children
+    // // will visualize only till the root and children
     root->visualizeTree(0, 0);
 
     // find the first word to guess
     Guesser* AI = new Guesser(root);
     
-    int attempts = AI->playGame("horse");
-    printf("ATTEMPTS : %d\n", attempts);
+    // int attempts = AI->playGame("horse");
+    // printf("ATTEMPTS : %d\n", attempts);
     
     return 0;
 }
