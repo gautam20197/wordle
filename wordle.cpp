@@ -14,11 +14,13 @@ void test_checker(PrefixTreeNode* root) {
 
 void test_disable_node(PrefixTreeNode* root) {
     // testing the disableNode and enableNode
+    printf("disabling\n");
     root->get_children()['S']->disableNode();
-    root->visualizeTree(0, true);
+    root->visualizeTree(0, 4);
 
+    printf("enabling\n");
     root->get_children()['S']->enableNode();
-    root->visualizeTree(0, true);
+    root->visualizeTree(0, 4);
 }
 
 void test_permute_chars(Guesser* AI) {
@@ -27,35 +29,36 @@ void test_permute_chars(Guesser* AI) {
     char_allowed_positions['a'] = std::vector<int>{0,1};
     char_allowed_positions['c'] = std::vector<int>{2,1};
     char_allowed_positions['e'] = std::vector<int>{3,1,4,0};
-    std::vector<std::string> ans = AI->permuteChars(yellow_chars, char_allowed_positions);
-    for(int i = 0; i < ans.size(); i++) {
-        printf("%s\n", ans[i].c_str());
+    std::queue<std::pair<std::string,std::string>> ans = AI->permuteChars(yellow_chars, char_allowed_positions, "$$$$$");
+    while(!ans.empty()) {
+        printf("%s\n", ans.front().first.c_str());
+        ans.pop();
     }
 }
 
 int main() {
     PrefixTreeNode* root = new PrefixTreeNode(-1, '$', nullptr);
 
-    // std::vector<std::string> words{"CHAIR", "STILL", "CHIME", "CREAM", "ULCER", "SHILL", "ULTRA", "APPLE", "HORSE", "SPINS", "CATER"};
-    // for (std::string word:words) {
-    //     root->addWord(word);
-    // }
-
-    std::ifstream file("allowed_words.txt");
-    std::string word;
-    while (std::getline(file, word))
-    {
+    std::vector<std::string> words{"chair", "still", "chime", "cream", "ulcer", "shill", "ultra", "apple", "horse", "spins", "cater"};
+    for (std::string word:words) {
         root->addWord(word);
     }
 
+    // std::ifstream file("allowed_words.txt");
+    // std::string word;
+    // while (std::getline(file, word))
+    // {
+    //     root->addWord(word);
+    // }
+
     // // will visualize only till the root and children
-    root->visualizeTree(0, 0);
+    // root->visualizeTree(0, 0);
 
     // find the first word to guess
     Guesser* AI = new Guesser(root);
     
-    // int attempts = AI->playGame("horse");
-    // printf("ATTEMPTS : %d\n", attempts);
+    int attempts = AI->playGame("ulcer");
+    printf("ATTEMPTS : %d\n", attempts);
     
     return 0;
 }

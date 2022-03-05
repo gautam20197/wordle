@@ -4,6 +4,7 @@
 #include <unordered_set>
 #include <utility>
 #include <fstream>
+#include <queue>
 
 class PrefixTreeNode {
     public:
@@ -132,6 +133,24 @@ class PrefixTreeNode {
                 } else if (level == golden_char_level) {
                     if (node_char != golden_char) {
                         disableNode();
+                    }
+                } else {
+                    return;
+                }
+            }
+        }
+
+        void enableNodeWithoutChar(char incorrect_char, int incorrect_char_level) {
+            if (!enabled) {
+                if (level < incorrect_char_level) {
+                    auto it = children.begin();
+                    while (it != children.end()) {
+                        it->second->enableNodeWithoutChar(incorrect_char, incorrect_char_level);
+                        it++;
+                    }
+                } else if (level == incorrect_char_level) {
+                    if (node_char != incorrect_char) {
+                        enableNode();
                     }
                 } else {
                     return;
